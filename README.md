@@ -1,7 +1,9 @@
 # Final Project 
 ## Maisha Miah Period 5
 ### Features to be Implemented: 
-* New primative shapes 
+* Light
 * Mesh
-* Save_coordinate_system
 * Set (assign a value to a knob)
+* Save_coordinate_system
+
+** considering to also add New Primative Shapes, if time allows 

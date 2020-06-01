@@ -153,29 +153,54 @@ def run(filename):
             if c == 'box':
                 if command['constants']:
                     reflect = command['constants']
-                add_box(tmp,
-                        args[0], args[1], args[2],
-                        args[3], args[4], args[5])
-                matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                if command['cs'] == None:
+                    add_box(tmp,
+                            args[0], args[1], args[2],
+                            args[3], args[4], args[5])
+                    matrix_mult( stack[-1], tmp )
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                else:
+                    cs = coord_sys [command['cs']]
+                    add_box(tmp,
+                            args[0], args[1], args[2],
+                            args[3], args[4], args[5])
+                    matrix_mult( cs, tmp )
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'sphere':
                 if command['constants']:
                     reflect = command['constants']
-                add_sphere(tmp,
-                           args[0], args[1], args[2], args[3], step_3d)
-                matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                if command['cs'] == None:
+                    add_sphere(tmp,
+                               args[0], args[1], args[2], args[3], step_3d)
+                    matrix_mult( stack[-1], tmp )
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    tmp = []
+                else:
+                    cs = coord_sys [command['cs']]
+                    # print ("cs: ", cs)
+                    add_sphere(tmp,
+                               args[0], args[1], args[2], args[3], step_3d)
+                    matrix_mult( cs, tmp )
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
                 if command['constants']:
                     reflect = command['constants']
-                add_torus(tmp,
-                          args[0], args[1], args[2], args[3], args[4], step_3d)
-                matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                if command['cs'] == None:
+                    add_torus(tmp,
+                              args[0], args[1], args[2], args[3], args[4], step_3d)
+                    matrix_mult( stack[-1], tmp )
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+
+                else:
+                    cs = coord_sys [command['cs']]
+                    add_torus(tmp,
+                              args[0], args[1], args[2], args[3], args[4], step_3d)
+                    matrix_mult( cs, tmp )
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'line':

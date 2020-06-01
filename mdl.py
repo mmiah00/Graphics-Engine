@@ -10,6 +10,7 @@ tokens = (
     "LIGHT",
     "CONSTANTS",
     "SAVE_COORDS",
+    "TOP_COORD", #saving the top coordinate system as a token
     "CAMERA",
     "AMBIENT",
     "TORUS",
@@ -49,6 +50,7 @@ reserved = {
     "light" : "LIGHT",
     "constants" : "CONSTANTS",
     "save_coord_system" : "SAVE_COORDS",
+    "top_coord_system" : "TOP_COORD", #added TOP_COORD
     "camera" : "CAMERA",
     "ambient" : "AMBIENT",
     "torus" : "TORUS",

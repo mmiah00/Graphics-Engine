@@ -122,6 +122,7 @@ def run(filename):
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
+    coord_sys = {} #saving the coordinate systems (key = name and value = coordinate_system)
     for f in range(num_frames):
         tmp = new_matrix()
         ident( tmp )
@@ -141,10 +142,10 @@ def run(filename):
             frame = frames[f]
             for knob in frame:
                 symbols[knob][1] = frame[knob]
-                print('\tkob: ' + knob + '\tvalue: ' + str(frame[knob]))
+                #print('\tkob: ' + knob + '\tvalue: ' + str(frame[knob]))
 
         for command in commands:
-            print(command)
+            #print(command)
             c = command['op']
             args = command['args']
             knob_value = 1
@@ -214,6 +215,10 @@ def run(filename):
                 stack.append([x[:] for x in stack[-1]] )
             elif c == 'pop':
                 stack.pop()
+            elif c == 'save_coord_system': #saving the top of the coordinates stack
+                name = command['cs']
+                coord_sys[name] = [x[:] for x in stack[-1]]
+                #print (coord_sys)
             elif c == 'display':
                 display(screen)
             elif c == 'save':

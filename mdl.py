@@ -10,7 +10,6 @@ tokens = (
     "LIGHT",
     "CONSTANTS",
     "SAVE_COORDS",
-    "TOP_COORD", #saving the top coordinate system as a token
     "CAMERA",
     "AMBIENT",
     "TORUS",
@@ -50,7 +49,6 @@ reserved = {
     "light" : "LIGHT",
     "constants" : "CONSTANTS",
     "save_coord_system" : "SAVE_COORDS",
-    "top_coord_system" : "TOP_COORD", #added TOP_COORD
     "camera" : "CAMERA",
     "ambient" : "AMBIENT",
     "torus" : "TORUS",
@@ -361,7 +359,6 @@ def p_save_coords(p):
     symbols[p[2]] = ['coord_sys', []]
     commands.append(cmd)
 
-
 def p_tween(p):
     "command : TWEEN NUMBER NUMBER SYMBOL SYMBOL"
     cmd = {'op':p[1], 'args':p[2:4], 'knob_list0':p[4], 'knob_list1':p[5]}
@@ -406,6 +403,10 @@ def parseFile(filename):
             yacc.parse(line)
         f.close()
         result = (commands[:], deepcopy(symbols))
+        # print ("SYMBOLS: ")
+        # for key in symbols:
+        #     print(key, symbols[key])
+        # print ("\n\n")
         commands = []
         symbols = {}
         return result

@@ -124,6 +124,7 @@ def run(filename):
 
     coord_sys = {} #saving the coordinate systems (key = name and value = corresponding coordinate_system)
     all_knobs = {} #a dictionary of the knobs and their values
+    knoblists = {} #saves all the knob lists (key = name and value = list of values for all the knobs)
     for f in range(num_frames):
         tmp = new_matrix()
         ident( tmp )
@@ -246,12 +247,18 @@ def run(filename):
                 name = command['cs']
                 coord_sys[name] = [x[:] for x in stack[-1]]
                 #print (coord_sys)
-            elif c == 'set':
+            elif c == 'set': #sets a knob's value
                 all_knobs[command['knob']] = command['args']
-            elif c == 'setknobs':
+            elif c == 'setknobs': #sets all the knobs' value
                 val = command['args']
                 for knob in all_knobs:
                     all_knobs[knob] = val
+            elif c == 'save_knobs':
+                name = command['args']
+                knoblists[name] = []
+                for knob in all_knobs:
+                    val = all_knobs[knob]
+                    knoblists[name].append (val)
             #############################################################
             elif c == 'display':
                 display(screen)

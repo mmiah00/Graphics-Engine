@@ -122,7 +122,8 @@ def run(filename):
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
-    coord_sys = {} #saving the coordinate systems (key = name and value = coordinate_system)
+    coord_sys = {} #saving the coordinate systems (key = name and value = corresponding coordinate_system)
+    all_knobs = {} #a dictionary of the knobs and their values
     for f in range(num_frames):
         tmp = new_matrix()
         ident( tmp )
@@ -240,10 +241,18 @@ def run(filename):
                 stack.append([x[:] for x in stack[-1]] )
             elif c == 'pop':
                 stack.pop()
+            ######################### ADDITIONS #########################
             elif c == 'save_coord_system': #saving the top of the coordinates stack
                 name = command['cs']
                 coord_sys[name] = [x[:] for x in stack[-1]]
                 #print (coord_sys)
+            elif c == 'set':
+                all_knobs[command['knob']] = command['args']
+            elif c == 'setknobs':
+                val = command['args']
+                for knob in all_knobs:
+                    all_knobs[knob] = val
+            #############################################################
             elif c == 'display':
                 display(screen)
             elif c == 'save':
@@ -253,6 +262,6 @@ def run(filename):
             fname = 'anim/%s%03d.png'%(name, f)
             print('Saving frame: '  + fname)
             save_extension(screen, fname)
-        # end fromes loop
+        # end frames loop
     if num_frames > 1:
         make_animation(name)

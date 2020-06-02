@@ -41,6 +41,17 @@ def get_lighting(normal, view, ambient, light, symbols, reflect ):
 
     return i
 
+'''
+Emissive Light: light emitted by an object, makes objects seem self-luminous
+Intensity: a number between 0 and 1 to demonstrate an object's intrinsic intensity
+*** emissive light may not add a dramatic effect to an image,
+    but it can be helpful to display things like neon signs and lights
+'''
+def calculate_emissive(light, intensity):
+    return [light[RED] * intensity[RED],
+            light[GREEN] * intensity[GREEN],
+            light[BLUE] * intensity[BLUE]]
+
 def calculate_ambient(alight, reflect):
     a = [0, 0, 0]
     a[RED] = alight[RED] * reflect['red'][AMBIENT]

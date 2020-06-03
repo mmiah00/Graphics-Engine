@@ -118,13 +118,13 @@ def run(filename):
                           'green': [0.2, 0.5, 0.5],
                           'blue': [0.2, 0.5, 0.5]}]
     reflect = '.white'
-
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
     coord_sys = {} #saving the coordinate systems (key = name and value = corresponding coordinate_system)
     all_knobs = {} #a dictionary of the knobs and their values
     knoblists = {} #saves all the knob lists (key = name and value = list of values for all the knobs)
+    lights = {} #stores the light "datastructure" (key = location ([x,y,z]) and value = corresponding rgb values)
     for f in range(num_frames):
         tmp = new_matrix()
         ident( tmp )
@@ -259,6 +259,14 @@ def run(filename):
                 for knob in all_knobs:
                     val = all_knobs[knob]
                     knoblists[name].append (val)
+            elif c == 'light':
+                name = command ['light']
+                xyz = symbols[name][1]['location']
+                rgb = symbols[name][1]['color']
+                lights[xyz] = rgb
+                #print (symbols[name])
+            elif c == 'mesh':
+                pass
             #############################################################
             elif c == 'display':
                 display(screen)

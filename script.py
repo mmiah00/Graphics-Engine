@@ -153,6 +153,7 @@ def run(filename):
             knob_value = 1
 
             if c == 'box':
+                print ("making box\t\t lights: ", len (lights))
                 if command['constants']:
                     reflect = command['constants']
                 if command['cs'] == None:
@@ -160,24 +161,43 @@ def run(filename):
                             args[0], args[1], args[2],
                             args[3], args[4], args[5])
                     matrix_mult( stack[-1], tmp )
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    if len (lights) > 0:
+                        for l in lights:
+                            li = lights[l]
+                            #print (li)
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                    else:
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 else:
                     cs = coord_sys [command['cs']]
                     add_box(tmp,
                             args[0], args[1], args[2],
                             args[3], args[4], args[5])
                     matrix_mult( cs, tmp )
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    if len (lights) > 0:
+                        for l in lights:
+                            li = lights[l]
+                            #print (li)
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                    else:
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'sphere':
+                print ("making sphere\t\t lights: ", len (lights))
                 if command['constants']:
                     reflect = command['constants']
                 if command['cs'] == None:
                     add_sphere(tmp,
                                args[0], args[1], args[2], args[3], step_3d)
                     matrix_mult( stack[-1], tmp )
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    if len (lights) > 0:
+                        for l in lights:
+                            li = lights[l]
+                            #print (li)
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                    else:
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                     tmp = []
                 else:
                     cs = coord_sys [command['cs']]
@@ -185,24 +205,42 @@ def run(filename):
                     add_sphere(tmp,
                                args[0], args[1], args[2], args[3], step_3d)
                     matrix_mult( cs, tmp )
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    if len (lights) > 0:
+                        for l in lights:
+                            li = lights[l]
+                            #print (li)
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                    else:
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
+                print ("making torus\t\t lights: ", len (lights))
                 if command['constants']:
                     reflect = command['constants']
                 if command['cs'] == None:
                     add_torus(tmp,
                               args[0], args[1], args[2], args[3], args[4], step_3d)
                     matrix_mult( stack[-1], tmp )
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-
+                    if len (lights) > 0:
+                        for l in lights:
+                            li = lights[l]
+                            #print (li)
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                    else:
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 else:
                     cs = coord_sys [command['cs']]
                     add_torus(tmp,
                               args[0], args[1], args[2], args[3], args[4], step_3d)
                     matrix_mult( cs, tmp )
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    if len (lights) > 0:
+                        for l in lights:
+                            li = lights[l]
+                            #print (li)
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                    else:
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'line':
@@ -263,7 +301,7 @@ def run(filename):
                 name = command ['light']
                 xyz = symbols[name][1]['location']
                 rgb = symbols[name][1]['color']
-                lights[xyz] = rgb
+                lights[name] = [xyz,rgb]
                 #print (symbols[name])
             elif c == 'mesh':
                 pass

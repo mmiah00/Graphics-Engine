@@ -292,7 +292,6 @@ def p_command_knobs(p):
         cmd['knob'] = p[2]
         cmd['args'].append(p[3])
         symbols[p[2]] = p[3]
-	print ("SET: ", cmd)
     else:
         cmd['args'].append(p[2])
     commands.append(cmd)

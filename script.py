@@ -121,7 +121,6 @@ def run(filename):
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
-    all_knobs = {} #a dictionary of the knobs and their values
     knoblists = {} #saves all the knob lists (key = name and value = list of values for all the knobs)
     lights = {} #stores the light "datastructure" (key = location ([x,y,z]) and value = corresponding rgb values)
     for f in range(num_frames):
@@ -263,12 +262,13 @@ def run(filename):
                 # print (symbols[name])
             elif c == 'set': #sets a knob's value
                 name = command['knob']
-		print (symbols)
-                #all_knobs[command['knob']] = command['args']
+                symbols[name][1] = command['args'][0]
+                #print (symbols)
             elif c == 'setknobs': #sets all the knobs' value
-                val = command['args']
-                for knob in all_knobs:
-                    all_knobs[knob] = val
+                for symb in symbols:
+                    if symbols[symb][0] == 'knob':
+                        symbols[symb][1] = command['args'][0]
+                    #print (symb, " : ", symbols[symb][1])
             elif c == 'save_knobs':
                 name = command['args']
                 knoblists[name] = []

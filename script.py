@@ -121,7 +121,6 @@ def run(filename):
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
-    coord_sys = {} #saving the coordinate systems (key = name and value = corresponding coordinate_system)
     all_knobs = {} #a dictionary of the knobs and their values
     knoblists = {} #saves all the knob lists (key = name and value = list of values for all the knobs)
     lights = {} #stores the light "datastructure" (key = location ([x,y,z]) and value = corresponding rgb values)
@@ -263,7 +262,8 @@ def run(filename):
                 # print ("saving coordinate system ", name)
                 # print (symbols[name])
             elif c == 'set': #sets a knob's value
-                all_knobs[command['knob']] = command['args']
+                print (command['knob'], " : ", command['args'])
+                #all_knobs[command['knob']] = command['args']
             elif c == 'setknobs': #sets all the knobs' value
                 val = command['args']
                 for knob in all_knobs:

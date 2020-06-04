@@ -152,10 +152,10 @@ def run(filename):
             knob_value = 1
 
             if c == 'box':
-                print ("making box\t\t lights: ", len (lights))
+                #print ("making box\t\t lights: ", len (lights))
                 if command['constants']:
                     reflect = command['constants']
-                print (command['cs'])
+                #print (command['cs'])
                 add_box(tmp,
                         args[0], args[1], args[2],
                         args[3], args[4], args[5])
@@ -164,7 +164,7 @@ def run(filename):
                     print (symbols[command['cs']][1])
                     matrix_mult(symbols[command['cs']][1], tmp )
                 else:
-                    print ("CS: ", 'DEFAULT')
+                    #print ("CS: ", 'DEFAULT')
                     matrix_mult( stack[-1], tmp )
                 if len (lights) > 0:
                     for l in lights:
@@ -176,7 +176,7 @@ def run(filename):
                 tmp = []
                 reflect = '.white'
             elif c == 'sphere':
-                print ("making sphere\t\t lights: ", len (lights))
+                #print ("making sphere\t\t lights: ", len (lights))
                 if command['constants']:
                     reflect = command['constants']
                 add_sphere(tmp, args[0], args[1], args[2], args[3], step_3d)
@@ -185,7 +185,7 @@ def run(filename):
                     print (symbols[command['cs']][1])
                     matrix_mult(symbols[command['cs']][1], tmp )
                 else:
-                    print ("CS: ", 'DEFAULT')
+                    #print ("CS: ", 'DEFAULT')
                     matrix_mult( stack[-1], tmp )
                 if len (lights) > 0:
                     for l in lights:
@@ -197,7 +197,7 @@ def run(filename):
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
-                print ("making torus\t\t lights: ", len (lights))
+                #print ("making torus\t\t lights: ", len (lights))
                 if command['constants']:
                     reflect = command['constants']
                 add_torus(tmp, args[0], args[1], args[2], args[3], args[4], step_3d)
@@ -206,7 +206,7 @@ def run(filename):
                     print (symbols[command['cs']][1])
                     matrix_mult(symbols[command['cs']][1], tmp )
                 else:
-                    print ("CS: ", 'DEFAULT')
+                    #print ("CS: ", 'DEFAULT')
                     matrix_mult( stack[-1], tmp )
                 if len (lights) > 0:
                     for l in lights:
@@ -262,7 +262,8 @@ def run(filename):
                 # print ("saving coordinate system ", name)
                 # print (symbols[name])
             elif c == 'set': #sets a knob's value
-                print (command['knob'], " : ", command['args'])
+                name = command['knob']
+		print (symbols)
                 #all_knobs[command['knob']] = command['args']
             elif c == 'setknobs': #sets all the knobs' value
                 val = command['args']

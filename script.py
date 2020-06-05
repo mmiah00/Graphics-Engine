@@ -134,10 +134,11 @@ def mesh_parser (file):
     return file_commands
 
 def mesh_draw (parsed_file, edges):
+    for group in parsed_file['faces']:
+        for vertices in parsed_file['faces'][group]:
+            print (vertices)
+        print ()
 
-    for command in parsed_file:
-        if command[0] == 'v':
-            pass
 def run(filename):
     """
     This function runs an mdl script
@@ -231,8 +232,6 @@ def run(filename):
                     reflect = command['constants']
                 add_sphere(tmp, args[0], args[1], args[2], args[3], step_3d)
                 if command['cs']:
-                    print ("CS: ", command['cs'])
-                    print (symbols[command['cs']][1])
                     matrix_mult(symbols[command['cs']][1], tmp )
                 else:
                     #print ("CS: ", 'DEFAULT')
@@ -334,7 +333,7 @@ def run(filename):
                 #print (symbols[name])
             elif c == 'mesh':
                 a = mesh_parser (command['cs'] + ".obj")
-                #mesh_draw (a)
+                mesh_draw (a,[])
             #############################################################
             elif c == 'display':
                 display(screen)

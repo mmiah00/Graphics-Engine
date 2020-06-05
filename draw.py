@@ -76,6 +76,19 @@ def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x1, y1, z1)
     add_point(polygons, x2, y2, z2)
 
+def add_mesh (polygons, parsed_file):
+    v = parsed_file['vertices']
+    for group in parsed_file['faces']:
+        for vertices in parsed_file['faces'][group]:
+            for i in range (len (vertices)):
+                if i == len (vertices) - 1:
+                    point_now = vertices[i]
+                    next_point = vertices[0]
+                else:
+                    point_now = vertices[i]
+                    next_point = vertices[i + 1]
+                add_edge (points, v[point_now][0], v[point_now][1], v[point_now][2],
+                                  v[next_point[0], v[next_point][1], v[next_point][2]])
 def draw_polygons( polygons, screen, zbuffer, view, ambient, light, symbols, reflect):
     if len(polygons) < 2:
         print('Need at least 3 points to draw')

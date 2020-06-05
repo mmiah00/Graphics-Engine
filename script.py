@@ -332,8 +332,11 @@ def run(filename):
                 lights[name] = [xyz,rgb]
                 #print (symbols[name])
             elif c == 'mesh':
-                a = mesh_parser (command['cs'] + ".obj")
-                mesh_draw (a,[])
+                parsed_file = mesh_parser (command['cs'] + ".obj")
+                add_mesh (tmp, parsed_file)
+                matrix_mult (stack[-1], tmp)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                tmp = []
             #############################################################
             elif c == 'display':
                 display(screen)

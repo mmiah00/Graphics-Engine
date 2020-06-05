@@ -86,6 +86,17 @@ def second_pass( commands, num_frames ):
                 #print 'knob: ' + knob_name + '\tvalue: ' + str(frames[f][knob_name])
     return frames
 
+def mesh_parser (file):
+    print ("running mesh")
+    l = open (file, "r").read ()
+    lines = l.split ("\n")
+    commands = ['v', 'vt', 'vp', 'f', 'l', 'mtllib', 'usemtl', 'o', 'g', 'Kd', 'Ka', 'Ks', 'd', 'Tr', 's']
+    file_commands = []
+    for command in lines:
+        c = command.split (" ")
+        if c[0] in commands:
+            file_commands.append (c)
+    return (file_commands)
 
 def run(filename):
     """
@@ -282,7 +293,8 @@ def run(filename):
                 lights[name] = [xyz,rgb]
                 #print (symbols[name])
             elif c == 'mesh':
-                pass
+                print (command)
+                mesh_parser (command['cs'] + ".obj")
             #############################################################
             elif c == 'display':
                 display(screen)

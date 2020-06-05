@@ -91,13 +91,37 @@ def mesh_parser (file):
     l = open (file, "r").read ()
     lines = l.split ("\n")
     commands = ['v', 'vt', 'vp', 'f', 'l', 'mtllib', 'usemtl', 'o', 'g', 'Kd', 'Ka', 'Ks', 'd', 'Tr', 's']
-    file_commands = []
+    vertices = []
+    groups = {} #key = group name and value = list of faces
+    group_now = None
     for command in lines:
         c = command.split (" ")
         if c[0] in commands:
-            file_commands.append (c)
-    return (file_commands)
+            if c[0] == 'g':
+                if len (c) > 1:
+                    group_now = c[1]
+                else:
+                    group_now = "group1"
+                groups[group_now] = []
+            if c[0] == 'v':
+                vertices.append ([float (c[1]), float (c[2]), float (c[3])])
+            if c[0] == 'f':
+                adding = c[1:]
+                groups[group_now].append ([int (x) - 1 for x in adding]) #subtracting one so it aligns with the indices in the vertices list
+            if c[0] == 's': #shading groups
+                pass
+            if c[0] == 'usemtl':
+                pass
 
+            #file_commands.append (c)
+    file_commands = {'vertices': vertices, 'faces': groups}
+    return file_commands
+
+def mesh_draw (parsed_file, edges):
+
+    for command in parsed_file:
+        if command[0] == 'v':
+            pass
 def run(filename):
     """
     This function runs an mdl script
@@ -293,8 +317,8 @@ def run(filename):
                 lights[name] = [xyz,rgb]
                 #print (symbols[name])
             elif c == 'mesh':
-                print (command)
-                mesh_parser (command['cs'] + ".obj")
+                a = mesh_parser (command['cs'] + ".obj")
+                #mesh_draw (a)
             #############################################################
             elif c == 'display':
                 display(screen)

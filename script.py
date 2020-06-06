@@ -170,11 +170,13 @@ def run(filename):
                           'green': [0.2, 0.5, 0.5],
                           'blue': [0.2, 0.5, 0.5]}]
     reflect = '.white'
+    for key in symbols:
+        if symbols[key][0] == 'light':
+            lights.append ([symbols[key][1]['location'], symbols[key][1]['color']])
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
     knoblists = {} #saves all the knob lists (key = name and value = list of values for all the knobs)
-    lights = {} #stores the light "datastructure" (key = location ([x,y,z]) and value = corresponding rgb values)
     for f in range(num_frames):
         tmp = new_matrix()
         ident( tmp )
@@ -217,13 +219,7 @@ def run(filename):
                 else:
                     #print ("CS: ", 'DEFAULT')
                     matrix_mult( stack[-1], tmp )
-                if len (lights) > 0:
-                    for l in lights:
-                        li = lights[l]
-                        #print (li)
-                        draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
-                else:
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'sphere':
@@ -236,13 +232,7 @@ def run(filename):
                 else:
                     #print ("CS: ", 'DEFAULT')
                     matrix_mult( stack[-1], tmp )
-                if len (lights) > 0:
-                    for l in lights:
-                        li = lights[l]
-                        #print (li)
-                        draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
-                else:
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
@@ -257,13 +247,7 @@ def run(filename):
                 else:
                     #print ("CS: ", 'DEFAULT')
                     matrix_mult( stack[-1], tmp )
-                if len (lights) > 0:
-                    for l in lights:
-                        li = lights[l]
-                        #print (li)
-                        draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
-                else:
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'line':
@@ -325,17 +309,11 @@ def run(filename):
                 for knob in all_knobs:
                     val = all_knobs[knob]
                     knoblists[name].append (val)
-            elif c == 'light':
-                name = command ['light']
-                xyz = symbols[name][1]['location']
-                rgb = symbols[name][1]['color']
-                lights[name] = [xyz,rgb]
-                #print (symbols[name])
             elif c == 'mesh':
                 parsed_file = mesh_parser (command['cs'] + ".obj")
                 add_mesh (tmp, parsed_file)
                 matrix_mult (stack[-1], tmp)
-                draw_polygons(tmp, screen, zbuffer, view, ambient, li, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
             #############################################################
             elif c == 'display':

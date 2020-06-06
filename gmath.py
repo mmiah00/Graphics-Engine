@@ -21,17 +21,18 @@ COLOR = 1
 SPECULAR_EXP = 4
 
 #lighting functions
-def get_lighting(normal, view, ambient, light, symbols, reflect ):
+def get_lighting(normal, view, ambient, lights, symbols, reflect ):
 
     n = normal[:]
     normalize(n)
-    normalize(light[LOCATION])
+    for l in lights:
+        normalize(light[LOCATION])
     normalize(view)
     r = symbols[reflect][1]
 
     a = calculate_ambient(ambient, r)
-    d = calculate_diffuse(light, r, n)
-    s = calculate_specular(light, r, view, n)
+    d = calculate_diffuse(lights, r, n)
+    s = calculate_specular(lights, r, view, n)
 
     i = [0, 0, 0]
     i[RED] = int(a[RED] + d[RED] + s[RED])
@@ -41,17 +42,6 @@ def get_lighting(normal, view, ambient, light, symbols, reflect ):
 
     return i
 
-'''
-Emissive Light: light emitted by an object, makes objects seem self-luminous
-Intensity: a number between 0 and 1 to demonstrate an object's intrinsic intensity
-*** emissive light may not add a dramatic effect to an image,
-    but it can be helpful to display things like neon signs and lights
-'''
-def calculate_emissive(light, intensity):
-    return [light[RED] * intensity[RED],
-            light[GREEN] * intensity[GREEN],
-            light[BLUE] * intensity[BLUE]]
-
 def calculate_ambient(alight, reflect):
     a = [0, 0, 0]
     a[RED] = alight[RED] * reflect['red'][AMBIENT]
@@ -59,33 +49,35 @@ def calculate_ambient(alight, reflect):
     a[BLUE] = alight[BLUE] * reflect['blue'][AMBIENT]
     return a
 
-def calculate_diffuse(light, reflect, normal):
+def calculate_diffuse(lights, reflect, normal):
     d = [0, 0, 0]
 
-    dot = dot_product( light[LOCATION], normal)
+    for l in lights:
+        dot = dot_product( light[LOCATION], normal)
 
-    dot = dot if dot > 0 else 0
-    d[RED] = light[COLOR][RED] * reflect['red'][DIFFUSE] * dot
-    d[GREEN] = light[COLOR][GREEN] * reflect['green'][DIFFUSE] * dot
-    d[BLUE] = light[COLOR][BLUE] * reflect['blue'][DIFFUSE] * dot
+        dot = dot if dot > 0 else 0
+        d[RED] = light[COLOR][RED] * reflect['red'][DIFFUSE] * dot
+        d[GREEN] = light[COLOR][GREEN] * reflect['green'][DIFFUSE] * dot
+        d[BLUE] = light[COLOR][BLUE] * reflect['blue'][DIFFUSE] * dot
     return d
 
-def calculate_specular(light, reflect, view, normal):
+def calculate_specular(lights, reflect, view, normal):
     s = [0, 0, 0]
     n = [0, 0, 0]
 
-    result = 2 * dot_product(light[LOCATION], normal)
-    n[0] = (normal[0] * result) - light[LOCATION][0]
-    n[1] = (normal[1] * result) - light[LOCATION][1]
-    n[2] = (normal[2] * result) - light[LOCATION][2]
+    for l in lights:
+        result = 2 * dot_product(light[LOCATION], normal)
+        n[0] = (normal[0] * result) - light[LOCATION][0]
+        n[1] = (normal[1] * result) - light[LOCATION][1]
+        n[2] = (normal[2] * result) - light[LOCATION][2]
 
-    result = dot_product(n, view)
-    result = result if result > 0 else 0
-    result = pow( result, SPECULAR_EXP )
+        result = dot_product(n, view)
+        result = result if result > 0 else 0
+        result = pow( result, SPECULAR_EXP )
 
-    s[RED] = light[COLOR][RED] * reflect['red'][SPECULAR] * result
-    s[GREEN] = light[COLOR][GREEN] * reflect['green'][SPECULAR] * result
-    s[BLUE] = light[COLOR][BLUE] * reflect['blue'][SPECULAR] * result
+        s[RED] = light[COLOR][RED] * reflect['red'][SPECULAR] * result
+        s[GREEN] = light[COLOR][GREEN] * reflect['green'][SPECULAR] * result
+        s[BLUE] = light[COLOR][BLUE] * reflect['blue'][SPECULAR] * result
     return s
 
 def limit_color(color):

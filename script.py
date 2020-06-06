@@ -87,7 +87,6 @@ def second_pass( commands, num_frames ):
     return frames
 
 def mesh_parser (file):
-    print ("running mesh")
     l = open (file, "r").read ()
     lines = l.split ("\n")
 

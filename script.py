@@ -157,12 +157,12 @@ def run(filename):
     ambient = [50,
                50,
                50]
-    light = [[0.5,
+    light = [[[0.5,
               0.75,
               1],
              [255,
               255,
-              255]]
+              255]]]
 
     color = [0, 0, 0]
     symbols['.white'] = ['constants',
@@ -170,9 +170,6 @@ def run(filename):
                           'green': [0.2, 0.5, 0.5],
                           'blue': [0.2, 0.5, 0.5]}]
     reflect = '.white'
-    for key in symbols:
-        if symbols[key][0] == 'light':
-            lights.append ([symbols[key][1]['location'], symbols[key][1]['color']])
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
@@ -309,6 +306,11 @@ def run(filename):
                 for knob in all_knobs:
                     val = all_knobs[knob]
                     knoblists[name].append (val)
+            elif c == 'light':
+                lite = symbols[command['light']][1]
+                print (lite)
+                light.append ([lite['location'], lite['color']])
+                print (light)
             elif c == 'mesh':
                 parsed_file = mesh_parser (command['cs'] + ".obj")
                 add_mesh (tmp, parsed_file)

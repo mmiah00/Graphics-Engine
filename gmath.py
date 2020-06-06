@@ -26,7 +26,7 @@ def get_lighting(normal, view, ambient, lights, symbols, reflect ):
     n = normal[:]
     normalize(n)
     for l in lights:
-        normalize(light[LOCATION])
+        normalize(l[LOCATION])
     normalize(view)
     r = symbols[reflect][1]
 
@@ -53,12 +53,12 @@ def calculate_diffuse(lights, reflect, normal):
     d = [0, 0, 0]
 
     for l in lights:
-        dot = dot_product( light[LOCATION], normal)
+        dot = dot_product( l[LOCATION], normal)
 
         dot = dot if dot > 0 else 0
-        d[RED] = light[COLOR][RED] * reflect['red'][DIFFUSE] * dot
-        d[GREEN] = light[COLOR][GREEN] * reflect['green'][DIFFUSE] * dot
-        d[BLUE] = light[COLOR][BLUE] * reflect['blue'][DIFFUSE] * dot
+        d[RED] = l[COLOR][RED] * reflect['red'][DIFFUSE] * dot
+        d[GREEN] = l[COLOR][GREEN] * reflect['green'][DIFFUSE] * dot
+        d[BLUE] = l[COLOR][BLUE] * reflect['blue'][DIFFUSE] * dot
     return d
 
 def calculate_specular(lights, reflect, view, normal):
@@ -66,18 +66,18 @@ def calculate_specular(lights, reflect, view, normal):
     n = [0, 0, 0]
 
     for l in lights:
-        result = 2 * dot_product(light[LOCATION], normal)
-        n[0] = (normal[0] * result) - light[LOCATION][0]
-        n[1] = (normal[1] * result) - light[LOCATION][1]
-        n[2] = (normal[2] * result) - light[LOCATION][2]
+        result = 2 * dot_product(l[LOCATION], normal)
+        n[0] = (normal[0] * result) - l[LOCATION][0]
+        n[1] = (normal[1] * result) - l[LOCATION][1]
+        n[2] = (normal[2] * result) - l[LOCATION][2]
 
         result = dot_product(n, view)
         result = result if result > 0 else 0
         result = pow( result, SPECULAR_EXP )
 
-        s[RED] = light[COLOR][RED] * reflect['red'][SPECULAR] * result
-        s[GREEN] = light[COLOR][GREEN] * reflect['green'][SPECULAR] * result
-        s[BLUE] = light[COLOR][BLUE] * reflect['blue'][SPECULAR] * result
+        s[RED] = l[COLOR][RED] * reflect['red'][SPECULAR] * result
+        s[GREEN] = l[COLOR][GREEN] * reflect['green'][SPECULAR] * result
+        s[BLUE] = l[COLOR][BLUE] * reflect['blue'][SPECULAR] * result
     return s
 
 def limit_color(color):

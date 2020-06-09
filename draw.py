@@ -76,26 +76,25 @@ def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x1, y1, z1)
     add_point(polygons, x2, y2, z2)
 
-def add_mesh (polygons, parsed_file):
+def add_mesh (polygons, parsed_file, group):
     v = parsed_file['vertices']
-    for group in parsed_file['faces']:
-        for vertices in parsed_file['faces'][group]:
-            for i in range (len (vertices)):
-                if i == len (vertices) - 1:
-                    p1 = vertices[i]
-                    p2 = vertices[0]
-                    p3 = vertices[1]
-                elif i == len (vertices) - 2:
-                    p1 = vertices[i]
-                    p2 = vertices[i + 1]
-                    p3 = vertices[0]
-                else:
-                    p1 = vertices[i]
-                    p2 = vertices[i + 1]
-                    p3 = vertices[i + 2]
-                add_polygon (polygons, v[p1][0], v[p1][1], v[p1][2],
-                                       v[p2][0], v[p2][1], v[p2][2],
-                                       v[p3][0], v[p3][1], v[p3][2])
+    for vertices in parsed_file['faces'][group]:
+        for i in range (len (vertices)):
+            if i == len (vertices) - 1:
+                p1 = vertices[i]
+                p2 = vertices[0]
+                p3 = vertices[1]
+            elif i == len (vertices) - 2:
+                p1 = vertices[i]
+                p2 = vertices[i + 1]
+                p3 = vertices[0]
+            else:
+                p1 = vertices[i]
+                p2 = vertices[i + 1]
+                p3 = vertices[i + 2]
+            add_polygon (polygons, v[p1][0], v[p1][1], v[p1][2],
+                                   v[p2][0], v[p2][1], v[p2][2],
+                                   v[p3][0], v[p3][1], v[p3][2])
 
 def draw_polygons( polygons, screen, zbuffer, view, ambient, light, symbols, reflect):
     if len(polygons) < 2:

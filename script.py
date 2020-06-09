@@ -86,7 +86,7 @@ def second_pass( commands, num_frames ):
                 #print 'knob: ' + knob_name + '\tvalue: ' + str(frames[f][knob_name])
     return frames
 
-def mesh_parser (file):
+def mesh_parser (file, symbols):
     l = open (file, "r").read ()
     lines = l.split ("\n")
 
@@ -128,8 +128,15 @@ def mesh_parser (file):
                             if line[0] == 'newmtl':
                                 mtl_now = line[1]
                                 mttlib[mtl_now] = {}
+                                symbols[mtl_now] = ['constants', {'red' : [],
+                                                                  'green' : [],
+                                                                  'blue' : []}]
                             elif line[0] != '#newmtl':
                                 mttlib[mtl_now][line[0]] = [float (x) for x in line[1:]]
+                                if line[0] == 'Ka' or line[0] == 'Ks' or line[0] == 'Kd':
+                                    symbols[mtl_now][1]['red'].append (line[1])
+                                    symbols[mtl_now][1]['green'].append (line[2])
+                                    symbols[mtl_now][1]['blue'].append (line[3])
             if c[0] == 'usemtl':
                 usemtl[group_now] = mttlib[c[1]]
             #file_commands.append (c)
@@ -315,7 +322,7 @@ def run(filename):
                 lite = symbols[command['light']][1]
                 light.append ([lite['location'], lite['color']])
             elif c == 'mesh':
-                parsed_file = mesh_parser (command['args'][0] + ".obj")
+                parsed_file = mesh_parser (command['args'][0] + ".obj", symbols)
                 add_mesh (tmp, parsed_file)
                 if command['cs']:
                     matrix_mult (command['cs'], tmp)

@@ -134,11 +134,11 @@ def mesh_parser (file, symbols):
                             elif line[0] != '#newmtl':
                                 mttlib[mtl_now][line[0]] = [float (x) for x in line[1:]]
                                 if line[0] == 'Ka' or line[0] == 'Ks' or line[0] == 'Kd':
-                                    symbols[mtl_now][1]['red'].append (line[1])
-                                    symbols[mtl_now][1]['green'].append (line[2])
-                                    symbols[mtl_now][1]['blue'].append (line[3])
+                                    symbols[mtl_now][1]['red'].append (float (line[1]))
+                                    symbols[mtl_now][1]['green'].append (float (line[2]))
+                                    symbols[mtl_now][1]['blue'].append (float (line[3]))
             if c[0] == 'usemtl':
-                usemtl[group_now] = mttlib[c[1]]
+                usemtl[group_now] = c[1]
             #file_commands.append (c)
     file_commands['vertices'] = vertices
     file_commands['faces'] = faces
@@ -208,7 +208,7 @@ def run(filename):
                 #print('\tkob: ' + knob + '\tvalue: ' + str(frame[knob]))
 
         for command in commands:
-            print(command)
+            #print(command)
             c = command['op']
             args = command['args']
             knob_value = 1
@@ -322,17 +322,19 @@ def run(filename):
                 lite = symbols[command['light']][1]
                 light.append ([lite['location'], lite['color']])
             elif c == 'mesh':
+                print ("Drawing mesh...")
+                print (command)
                 parsed_file = mesh_parser (command['args'][0] + ".obj", symbols)
-                add_mesh (tmp, parsed_file)
-                if command['cs']:
-                    matrix_mult (command['cs'], tmp)
-                else:
+                for group in parsed_file['faces']:
+                    add_mesh (tmp, parsed_file, group)
                     matrix_mult (stack[-1], tmp)
-                if command['constants']:
-                    reflect = command['constants']
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                tmp = []
-                reflect = '.white'
+                    try:
+                        reflect = parsed_file['constants'][group]
+                    except:
+                        pass
+                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                    tmp = []
+                    reflect = '.white'
             #############################################################
             elif c == 'display':
                 display(screen)

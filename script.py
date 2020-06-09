@@ -311,9 +311,14 @@ def run(filename):
                 light.append ([lite['location'], lite['color']])
                 print (light)
             elif c == 'mesh':
-                parsed_file = mesh_parser (command['cs'] + ".obj")
+                parsed_file = mesh_parser (command['args'] + ".obj")
                 add_mesh (tmp, parsed_file)
-                matrix_mult (stack[-1], tmp)
+                if command['cs'] == None:
+                    matrix_mult (stack[-1], tmp)
+                else:
+                    matrix_mult (command['cs'], tmp)
+                if command['constants']:
+                    reflect = command['constants']
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
             #############################################################

@@ -129,8 +129,8 @@ def mesh_parser (file, symbols):
                             elif line[0] != '#newmtl':
                                 mttlib[mtl_now][line[0]] = [float (x) for x in line[1:]]
             if c[0] == 'usemtl':
-                usemtl[group_now] = c[1]
                 if c[1] in mttlib.keys ():
+                    usemtl[group_now] = c[1]
                     symbols[c[1]] = ['constants', {'red' : [],
                                                       'green' : [],
                                                       'blue' : []}]

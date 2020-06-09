@@ -341,15 +341,22 @@ def run(filename):
                 light.append ([lite['location'], lite['color']])
             elif c == 'mesh':
                 # print ("Drawing mesh...")
-                # print (command)
+                print (command)
                 parsed_file = mesh_parser (command['args'][0] + ".obj", symbols)
                 for group in parsed_file['faces']:
                     add_mesh (tmp, parsed_file, group)
-                    matrix_mult (stack[-1], tmp)
+                    if command['cs']:
+                        matrix_mult (symbols[command['cs']][1], tmp)
+                    else:
+                        matrix_mult (stack[-1], tmp)
                     try:
-                        reflect = parsed_file['constants'][group]
+                        if command['constants']:
+                            reflect = command['constants']
+                        else:
+                            reflect = parsed_file['constants'][group]
                     except:
-                        pass
+                        if command['constants']:
+                            reflect = command['constants']
                     draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                     tmp = []
                     reflect = '.white'

@@ -90,10 +90,10 @@ def mesh_parser (file, symbols):
     l = open (file, "r").read ()
     lines = l.split ("\n")
 
-    commands = ['v', 'vt', 'vp', 'f', 'l', 'mtllib', 'usemtl', 'o', 'g', 'Kd', 'Ka', 'Ks', 'd', 'Tr', 's']
+    commands = ['v', 'vt', 'vp', 'f', 'l', 'mtllib', 'usemtl', 'o', 'g', 'd', 'Tr', 's']
     vertices = []
     faces = {} #key = group name and value = list of faces {group1: [f1, f2, f3, f4]}
-    mttlib = {}
+    mttlib = {} #key = constant and value = values of ka, kd, ks
     usemtl = {} #key = group name and value = list w specs {group1 : [blueteal, {ka : 0, kd : 0, ks : 0, illum : 0, ns : 0}]}
     group_now = None
 
@@ -114,8 +114,6 @@ def mesh_parser (file, symbols):
             if c[0] == 'f':
                 adding = c[1:]
                 faces[group_now].append ([int (x) - 1 for x in adding]) #subtracting one so it aligns with the indices in the vertices list
-            if c[0] == 's': #shading groups
-                pass
             if c[0] == 'mtllib': #using a .mtl file
                 s = open (c[1],'r').read ()
                 specs = s.split ("\n\n")
@@ -139,6 +137,39 @@ def mesh_parser (file, symbols):
                                     symbols[mtl_now][1]['blue'].append (float (line[3]))
             if c[0] == 'usemtl':
                 usemtl[group_now] = c[1]
+                if c[1] in mttlib.keys ():
+                    symbols[c[1]] = ['constants', {'red' : [],
+                                                      'green' : [],
+                                                      'blue' : []}]
+                    if 'Ka' not in mttlib[c[1]]:
+                        symbols[c[1]][1]['red'].append (0.0)
+                        symbols[c[1]][1]['green'].append (0.0)
+                        symbols[c[1]][1]['blue'].append (0.0)
+                    else:
+                        ambient = mttlib[c[1]]['Ka']
+                        symbols[c[1]][1]['red'].append (ambient[0])
+                        symbols[c[1]][1]['green'].append (ambient[1])
+                        symbols[c[1]][1]['blue'].append (ambient[2])
+
+                    if 'Kd' not in mttlib[c[1]]:
+                        symbols[c[1]][1]['red'].append (0.0)
+                        symbols[c[1]][1]['green'].append (0.0)
+                        symbols[c[1]][1]['blue'].append (0.0)
+                    else:
+                        diffuse = mttlib[c[1]]['Kd']
+                        symbols[c[1]][1]['red'].append (diffuse[0])
+                        symbols[c[1]][1]['green'].append (diffuse[1])
+                        symbols[c[1]][1]['blue'].append (diffuse[2])
+
+                    if 'Ks' not in mttlib[c[1]]:
+                        symbols[c[1]][1]['red'].append (0.0)
+                        symbols[c[1]][1]['green'].append (0.0)
+                        symbols[c[1]][1]['blue'].append (0.0)
+                    else:
+                        specular = mttlib[c[1]]['Ks']
+                        symbols[c[1]][1]['red'].append (specular[0])
+                        symbols[c[1]][1]['green'].append (specular[1])
+                        symbols[c[1]][1]['blue'].append (specular[2])
             #file_commands.append (c)
     file_commands['vertices'] = vertices
     file_commands['faces'] = faces
@@ -222,8 +253,8 @@ def run(filename):
                         args[0], args[1], args[2],
                         args[3], args[4], args[5])
                 if command['cs']:
-                    print ("CS: ", command['cs'])
-                    print (symbols[command['cs']][1])
+                    # print ("CS: ", command['cs'])
+                    # print (symbols[command['cs']][1])
                     matrix_mult(symbols[command['cs']][1], tmp )
                 else:
                     #print ("CS: ", 'DEFAULT')
@@ -250,8 +281,8 @@ def run(filename):
                     reflect = command['constants']
                 add_torus(tmp, args[0], args[1], args[2], args[3], args[4], step_3d)
                 if command['cs']:
-                    print ("CS: ", command['cs'])
-                    print (symbols[command['cs']][1])
+                    # print ("CS: ", command['cs'])
+                    # print (symbols[command['cs']][1])
                     matrix_mult(symbols[command['cs']][1], tmp )
                 else:
                     #print ("CS: ", 'DEFAULT')
@@ -322,8 +353,8 @@ def run(filename):
                 lite = symbols[command['light']][1]
                 light.append ([lite['location'], lite['color']])
             elif c == 'mesh':
-                print ("Drawing mesh...")
-                print (command)
+                # print ("Drawing mesh...")
+                # print (command)
                 parsed_file = mesh_parser (command['args'][0] + ".obj", symbols)
                 for group in parsed_file['faces']:
                     add_mesh (tmp, parsed_file, group)

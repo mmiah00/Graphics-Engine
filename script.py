@@ -99,6 +99,8 @@ def mesh_parser (file):
     for command in lines:
         c = command.split (" ")
         if c[0] in commands:
+            while '' in c:
+                c.remove ('')
             if c[0] == 'g':
                 if len (c) > 1:
                     group_now = c[1]
@@ -195,7 +197,7 @@ def run(filename):
                 #print('\tkob: ' + knob + '\tvalue: ' + str(frame[knob]))
 
         for command in commands:
-            #print(command)
+            print(command)
             c = command['op']
             args = command['args']
             knob_value = 1
@@ -307,20 +309,19 @@ def run(filename):
                     knoblists[name].append (val)
             elif c == 'light':
                 lite = symbols[command['light']][1]
-                print (lite)
                 light.append ([lite['location'], lite['color']])
-                print (light)
             elif c == 'mesh':
-                parsed_file = mesh_parser (command['args'] + ".obj")
+                parsed_file = mesh_parser (command['args'][0] + ".obj")
                 add_mesh (tmp, parsed_file)
-                if command['cs'] == None:
-                    matrix_mult (stack[-1], tmp)
-                else:
+                if command['cs']:
                     matrix_mult (command['cs'], tmp)
+                else:
+                    matrix_mult (stack[-1], tmp)
                 if command['constants']:
                     reflect = command['constants']
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
+                reflect = '.white'
             #############################################################
             elif c == 'display':
                 display(screen)

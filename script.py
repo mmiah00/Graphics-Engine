@@ -169,12 +169,6 @@ def mesh_parser (file, symbols):
     file_commands['constants'] = usemtl
     return file_commands
 
-def mesh_draw (parsed_file, edges):
-    for group in parsed_file['faces']:
-        for vertices in parsed_file['faces'][group]:
-            print (vertices)
-        print ()
-
 def run(filename):
     """
     This function runs an mdl script

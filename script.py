@@ -92,7 +92,9 @@ def mesh_parser (file):
 
     commands = ['v', 'vt', 'vp', 'f', 'l', 'mtllib', 'usemtl', 'o', 'g', 'Kd', 'Ka', 'Ks', 'd', 'Tr', 's']
     vertices = []
-    faces = {} #key = group name and value = list of faces
+    faces = {} #key = group name and value = list of faces {group1: [f1, f2, f3, f4]}
+    mttlib = {}
+    usemtl = {} #key = group name and value = list w specs {group1 : [blueteal, {ka : 0, kd : 0, ks : 0, illum : 0, ns : 0}]}
     group_now = None
 
     file_commands = {}
@@ -115,7 +117,6 @@ def mesh_parser (file):
             if c[0] == 's': #shading groups
                 pass
             if c[0] == 'mtllib': #using a .mtl file
-                file_commands['mtllib'] = [c[1], {}] #for the dictionary: key = mtl name and value = corresponding values (also represented in a dictionary)
                 s = open (c[1],'r').read ()
                 specs = s.split ("\n\n")
                 mtl_now = None
@@ -125,13 +126,16 @@ def mesh_parser (file):
                         if line != '':
                             line = line.split (" ")
                             if line[0] == 'newmtl':
-                                file_commands['mtllib'][1][line[1]] = {}
                                 mtl_now = line[1]
+                                mttlib[mtl_now] = {}
                             elif line[0] != '#newmtl':
-                                file_commands['mtllib'][1][mtl_now][line[0]] = [float (x) for x in line[1:]]
+                                mttlib[mtl_now][line[0]] = [float (x) for x in line[1:]]
+            if c[0] == 'usemtl':
+                usemtl[group_now] = mttlib[c[1]]
             #file_commands.append (c)
     file_commands['vertices'] = vertices
     file_commands['faces'] = faces
+    file_commands['constants'] = usemtl
     return file_commands
 
 def mesh_draw (parsed_file, edges):

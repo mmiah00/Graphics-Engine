@@ -340,7 +340,7 @@ def p_command_mesh(p):
     if isinstance(p[2], str):
         cmd['constants'] = p[2]
         arg_start+= 1
-    cmd['args'].append(p[arg_start + 1])
+    cmd['args'].append(p[arg_start])
     if len(p) == 4 and isinstance(p[3], str):
         cmd['cs'] = p[3]
     if len(p) == 5 and isinstance(p[4], str):

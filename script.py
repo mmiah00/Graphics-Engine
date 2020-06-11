@@ -340,8 +340,7 @@ def run(filename):
                 lite = symbols[command['light']][1]
                 light.append ([lite['location'], lite['color']])
             elif c == 'mesh':
-                # print ("Drawing mesh...")
-                print (command)
+                #print (command)
                 parsed_file = mesh_parser (command['args'][0] + ".obj", symbols)
                 for group in parsed_file['faces']:
                     add_mesh (tmp, parsed_file, group)

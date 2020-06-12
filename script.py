@@ -316,9 +316,9 @@ def run(filename):
                 stack.pop()
             ######################### ADDITIONS #########################
             elif c == 'save_coord_system': #saving the top of the coordinates stack
-                name = command['cs']
+                n = command['cs']
                 copee = [x[:] for x in stack[-1]]
-                symbols[name][1] = copee
+                symbols[n][1] = copee
                 # print ("saving coordinate system ", name)
                 # print (symbols[name])
             elif c == 'set': #sets a knob's value
@@ -343,22 +343,24 @@ def run(filename):
                 #print (command)
                 parsed_file = mesh_parser (command['args'][0] + ".obj", symbols)
                 for group in parsed_file['faces']:
-                    add_mesh (tmp, parsed_file, group)
-                    if command['cs']:
-                        matrix_mult (symbols[command['cs']][1], tmp)
-                    else:
-                        matrix_mult (stack[-1], tmp)
-                    try:
-                        if command['constants']:
-                            reflect = command['constants']
+                    if len (parsed_file['faces'][group]) > 3:
+                        add_mesh (tmp, parsed_file, group)
+                        if command['cs']:
+                            matrix_mult (symbols[command['cs']][1], tmp)
                         else:
-                            reflect = parsed_file['constants'][group]
-                    except:
-                        if command['constants']:
-                            reflect = command['constants']
-                    draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                    tmp = []
-                    reflect = '.white'
+                            matrix_mult (stack[-1], tmp)
+                        try:
+                            if command['constants']:
+                                reflect = command['constants']
+                            else:
+                                reflect = parsed_file['constants'][group]
+                        except:
+                            if command['constants']:
+                                reflect = command['constants']
+                        draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                        tmp = []
+                        reflect = '.white'
+
             #############################################################
             elif c == 'display':
                 display(screen)

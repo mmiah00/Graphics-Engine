@@ -1,0 +1,24 @@
+frames 50
+basename kingkong
+
+light l0 0.25 0.5 0.75 185 100 75
+
+push
+  move 400 50 -200
+  scale 5 10 5
+  mesh :skyscraper
+pop
+push
+move 75 85 0
+scale 25 25 25
+rotate y 90 turnright
+move 0 0 25 moveright
+rotate y 90 rightagain
+move 0 25 0 moveup
+//set_knob moveright 0.5
+//save_knobs klist
+mesh :al
+vary turnright 0 10 0 1
+vary moveright 11 25 0 0.5
+vary rightagain 26 36 0 1
+vary moveup 37 45 0 0.5
